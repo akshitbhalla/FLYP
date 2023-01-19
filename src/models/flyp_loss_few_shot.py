@@ -182,6 +182,15 @@ def flyp_loss_few_shot(args, clip_encoder, classification_head, logger):
             # print(val_acc)
 
             logger.info(f"Epoch {epoch} results {val_acc}")
+            
+            # Saving model
+            if args.save is not None:
+                os.makedirs(args.save, exist_ok=True)
+                model_path = os.path.join(args.save, f'checkpoint_{epoch}.pt')
+                logger.info('Saving model to' + str(model_path))
+                model.module.save(model_path)
+                optim_path = os.path.join(args.save, f'optim_{epoch}.pt')
+                torch.save(optimizer.state_dict(), optim_path)
 
             if cnt_loss <= min_cnt_loss:
                 max_val = val_acc
